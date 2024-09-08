@@ -2,7 +2,10 @@
 
 namespace App\Bookings;
 
+use App\Models\Employee;
+use App\Models\Service;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Spatie\Period\Boundaries;
 use Spatie\Period\Period;
 use Spatie\Period\PeriodCollection;
@@ -13,35 +16,32 @@ class ScheduleAvailability
 
     protected PeriodCollection $periods;
 
-    public function __construct()
+    public function __construct(protected Employee $employee, protected Service $service)
     {
         $this->periods = new PeriodCollection();
     }
 
-    public function forPeriod()
+    public function forPeriod(Carbon $startsAt, Carbon $endsAt)
     {
-        // The availability of an employee
-        $this->periods = $this->periods->add(
-            Period::make(
-                now()->startOfDay(),
-                now()->addDay()->endOfDay(),
-                Precision::MINUTE(),
-                Boundaries::EXCLUDE_ALL(),
-            )
-        );
 
-        // Subtract availability from holiday or appointments
-        $this->periods = $this->periods->subtract(
-            Period::make(
-                Carbon::createFromTimeString('12:00'),
-                Carbon::createFromTimeString('12:30'),
-                Precision::MINUTE(),
-                Boundaries::EXCLUDE_END(),
-            )
-        );
+        collect(CarbonPeriod::create($startsAt, $endsAt)->days())
+            ->each(function ($date) {
 
-        dd($this->periods);
+                $this->addAvailabilityFromSchedule($date);
+
+            });
+
+        // dd($this->periods);
     }
+
+    protected function addAvailabilityFromSchedule(Carbon $date)
+    {
+        $schedule = $this->employee->schedules->where('starts_at', '<=', $date)
+                    ->where('ends_at', '>=', $date);
+
+        dd($schedule);
+    }
+
 }
 
 
