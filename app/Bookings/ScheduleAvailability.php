@@ -31,15 +31,28 @@ class ScheduleAvailability
 
             });
 
-        // dd($this->periods);
+        dd($this->periods);
     }
 
     protected function addAvailabilityFromSchedule(Carbon $date)
     {
-        $schedule = $this->employee->schedules->where('starts_at', '<=', $date)
-                    ->where('ends_at', '>=', $date);
 
-        dd($schedule);
+        if (!$schedule = $this->employee->schedules->where('starts_at', '<=', $date)->where('ends_at', '>=', $date)->first()) {
+            return;
+        }
+
+        if (![$startsAt, $endsAt] = $schedule->getWorkingHoursFromDate($date)) {
+            return;
+        }
+
+        $this->periods = $this->periods->add(
+            Period::make(
+                $date->copy()->setTimeFromTimeString($startsAt),
+                $date->copy()->setTimeFromTimeString($endsAt)->subMinutes($this->service->duration),
+                Precision::MINUTE()
+            )
+        );
+
     }
 
 }
