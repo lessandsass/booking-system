@@ -30,8 +30,8 @@ return new class extends Migration
             $table->time('friday_starts_at')->nullable();
             $table->time('friday_ends_at')->nullable();
 
-            $table->time('sarturday_starts_at')->nullable();
-            $table->time('sarturday_ends_at')->nullable();
+            $table->time('saturday_starts_at')->nullable();
+            $table->time('saturday_ends_at')->nullable();
 
             $table->time('sunday_starts_at')->nullable();
             $table->time('sunday_ends_at')->nullable();
