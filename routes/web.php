@@ -1,9 +1,12 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Service;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Route;
 use App\Bookings\ScheduleAvailability;
+
+// Carbon::setTestNow(now()->setTimeFromTimeString('12:00'));
 
 Route::get('/', function () {
 
