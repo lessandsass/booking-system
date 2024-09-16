@@ -58,11 +58,6 @@ class ScheduleAvailability
         );
     }
 
-
-
-
-
-
     protected function subtractScheduleExclusion(ScheduleExclusion $exclusion)
     {
         $this->periods = $this->periods->subtract(
