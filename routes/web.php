@@ -21,6 +21,8 @@ Route::get('/', function () {
             now()->addDay()->endOfDay()
         );
 
+        dd($availability);
+
     // $generator = (new SlotRangeGenerator(
     //                 now()->startOfDay(),
     //                 now()->addDay()->endOfDay())
