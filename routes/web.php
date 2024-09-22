@@ -8,7 +8,7 @@ use App\Bookings\ScheduleAvailability;
 use App\Bookings\ServiceSlotAvailability;
 use App\Bookings\SlotRangeGenerator;
 
-// Carbon::setTestNow(now()->setTimeFromTimeString('12:00'));
+Carbon::setTestNow(now()->setTimeFromTimeString('12:00'));
 
 Route::get('/', function () {
 
