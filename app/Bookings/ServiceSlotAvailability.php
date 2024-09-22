@@ -8,7 +8,6 @@ use App\Models\Service;
 use App\Models\Employee;
 use Spatie\Period\Period;
 use Illuminate\Support\Collection;
-use Spatie\Period\PeriodCollection;
 
 class ServiceSlotAvailability
 {
@@ -44,6 +43,19 @@ class ServiceSlotAvailability
 
         return $range;
 
+    }
+
+    protected function removeEmptySlots(Collection $range)
+    {
+        return $range
+            ->filter(function (Date $date) {
+                $date->slots = $date->slots->filter(function (Slot $slot) {
+                    return $slot->hasEmployees();
+                });
+
+                return true;
+
+            });
     }
 
     protected function addAvailableEmployeeForPeriod(Collection $range, Period $period, Employee $employee)

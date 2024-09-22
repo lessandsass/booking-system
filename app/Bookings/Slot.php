@@ -5,7 +5,7 @@ namespace App\Bookings;
 use Carbon\Carbon;
 use App\Models\Employee;
 
-class Slot 
+class Slot
 {
     public $employees = [];
 
@@ -17,6 +17,11 @@ class Slot
     public function addEmployee(Employee $employee)
     {
         $this->employees[] = $employee;
+    }
+
+    public function hasEmployees()
+    {
+        return !empty($this->employees);
     }
 
 }
