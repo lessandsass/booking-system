@@ -8,7 +8,7 @@ use App\Bookings\ScheduleAvailability;
 use App\Bookings\ServiceSlotAvailability;
 use App\Bookings\SlotRangeGenerator;
 
-Carbon::setTestNow(now()->setTimeFromTimeString('12:00'));
+Carbon::setTestNow(now()->setTimeFromTimeString('17:00:00'));
 
 Route::get('/', function () {
 
@@ -21,7 +21,7 @@ Route::get('/', function () {
             now()->addDay()->endOfDay()
         );
 
-        dd($availability);
+        dd($availability->firstAvailableDate());
 
     // $generator = (new SlotRangeGenerator(
     //                 now()->startOfDay(),
