@@ -1,10 +1,5 @@
 <?php
 
-// - lists correct employee availability
-// - accounts for different daily schedule times
-// - does not show availability for schedule exclusions
-// - only shows availability from the current time with an hour in advanced
-
 use App\Bookings\ScheduleAvailability;
 use Carbon\Carbon;
 use App\Models\Employee;
