@@ -130,5 +130,26 @@ it('ignores cancelled appointments', function () {
 
 });
 
+it('shows multiple employees available for service', function () {
+    Carbon::setTestNow(Carbon::parse('1st January 2000'));
+
+    $service = Service::factory()->create([
+        'duration' => 30
+    ]);
+
+    $employees = Employee::factory()
+                    ->count(2)
+                    ->has(Schedule::factory()->state([
+                        'starts_at' => now()->startOfDay(),
+                        'ends_at' => now()->endOfDay(),
+                    ]))
+                    ->create();
+
+    $availability = (new ServiceSlotAvailability(collect($employees), $service))
+                    ->forPeriod(now()->startOfDay(), now()->endOfDay());
+
+    expect($availability->first()->slots->first()->employees)->toHaveCount(2);
+
+});
 
 
