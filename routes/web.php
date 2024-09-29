@@ -1,43 +1,7 @@
 <?php
 
-use Carbon\Carbon;
-use App\Models\Service;
-use App\Models\Employee;
+use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
-use App\Bookings\ScheduleAvailability;
-use App\Bookings\ServiceSlotAvailability;
-use App\Bookings\SlotRangeGenerator;
 
-Route::get('/', function () {
-
-    $employees = Employee::get();
-    $service = Service::find(1);
-
-    $availability = (new ServiceSlotAvailability($employees, $service))
-        ->forPeriod(
-            now()->startOfDay(),
-            now()->addDay()->endOfDay()
-        );
-
-        dd($availability->firstAvailableDate());
-
-    // $generator = (new SlotRangeGenerator(
-    //                 now()->startOfDay(),
-    //                 now()->addDay()->endOfDay())
-    //             );
-
-    // dd($generator->generate(30));
-
-    // $employee = Employee::find(1);
-    // $service = Service::find(1);
-
-    // $availability = (new ScheduleAvailability($employee, $service))
-    //     ->forPeriod(
-    //         now()->startOfDay(),
-    //         now()->addMonth()->endOfDay(),
-    //     );
-
-    // return view('welcome');
-});
-
+Route::get('/', BookingController::class)->name('booking');
 
