@@ -1,15 +1,17 @@
 <?php
 
 /*
-    3. excludes booked appointments for the employee
     4. ignores cancelled appointments
     5. shows multiple employees available for service
 */
 
 use Carbon\Carbon;
+use App\Bookings\Date;
+use App\Bookings\Slot;
 use App\Models\Service;
 use App\Models\Employee;
 use App\Models\Schedule;
+use App\Models\Appointment;
 use App\Bookings\ServiceSlotAvailability;
 
 it('shows available time slots for a service', function () {
@@ -59,6 +61,41 @@ it('lists multiple slots over more than one day', function () {
                     );
 
     expect($availability->first()->slots)->toHaveCount(16);
+
+});
+
+it('excludes booked appointments for the employee', function () {
+    Carbon::setTestNow(Carbon::parse('1st January 2000'));
+
+    $service = Service::factory()->create([
+        'duration' => 30
+    ]);
+
+    $employee = Employee::factory()
+                    ->has(Schedule::factory()->state([
+                        'starts_at' => now()->startOfDay(),
+                        'ends_at' => now()->endOfDay(),
+                    ]))
+                    ->has(Appointment::factory()->for($service)->state([
+                        'starts_at' => now()->setTimeFromTimeString('12:00'),
+                        'ends_at' => now()->setTimeFromTimeString('12:45'),
+                    ]))
+                    ->create();
+
+    $availability = (new ServiceSlotAvailability(collect([$employee]), $service))
+                    ->forPeriod(now()->startOfDay(), now()->endOfDay());
+
+    $slots = $availability->map(function (Date $date) {
+        return $date->slots->map(fn (Slot $slot) => $slot->time->toTimeString());
+    })
+    ->flatten()
+    ->toArray();
+
+    expect($slots)
+        ->toContain('11:30:00')
+        ->not->toContain('12:00')
+        ->not->toContain('12:30')
+        ->toContain('13:00:00');
 
 });
 
