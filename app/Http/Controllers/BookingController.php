@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke()
     {
-        return view('booking', [
+        return view('bookings.index', [
             'employees' => Employee::get(),
         ]);
     }
