@@ -1,9 +1,14 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookingController;
-use App\Http\Controllers\BookingEmployeeController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\BookingEmployeeController;
+
+
+// Carbon::setTestNow(now()->addDay()->setTimeFromTimeString('09:00:00'));
+
 
 Route::get('/', BookingController::class)->name('bookings');
 
