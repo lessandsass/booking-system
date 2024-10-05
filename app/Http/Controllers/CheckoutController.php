@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Bookings\ServiceSlotAvailability;
-use App\Models\Employee;
+use App\Bookings\Date;
 use App\Models\Service;
+use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Bookings\ServiceSlotAvailability;
 
 class CheckoutController extends Controller
 {
@@ -20,10 +21,18 @@ class CheckoutController extends Controller
                             now()->addMonth()->endOfDay()
                         );
 
+        $availableDates = $availability
+                            ->hasSlots()
+                            ->mapWithKeys(fn (Date $date) => [
+                                $date->date->toDateString() => $date->slots->count()
+                            ])
+                            ->toArray();
+
         return view('bookings.checkout', [
             'employee' => $employee,
             'service' => $service,
             'firstAvailableDate' => $availability->firstAvailableDate()->date->toDateString(),
+            'availableDates' => $availableDates,
         ]);
     }
 }

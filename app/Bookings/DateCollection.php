@@ -19,4 +19,5 @@ class DateCollection extends Collection
             return !$date->slots->isEmpty();
         });
     }
+
 }
