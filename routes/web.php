@@ -7,7 +7,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\BookingEmployeeController;
 
 
-// Carbon::setTestNow(now()->addDay()->setTimeFromTimeString('09:00:00'));
+Carbon::setTestNow(now()->addDay()->setTimeFromTimeString('15:30:00'));
 
 
 Route::get('/', BookingController::class)->name('bookings');

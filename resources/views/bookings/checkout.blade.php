@@ -37,6 +37,7 @@
                         date: '{{ $firstAvailableDate }}',
                         css: [
                             'https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css',
+                            '/vendor/easepick/easepick.css',
                         ],
                         plugins: [
                             'LockPlugin'
@@ -46,6 +47,22 @@
                             filter (date, picked) {
                                 return !Object.keys(availableDates).includes(date.format('YYYY-MM-DD'))
                             }
+                        },
+                        setup (picker) {
+                            picker.on('view', (e) => {
+                                const { view, date, target } = e.detail
+                                const dateString = date ? date.format('YYYY-MM-DD') : null
+
+                                if (view === 'CalendarDay' && availableDates[dateString]) {
+                                    const span = target.querySelector('.day-slots') || document.createElement('span')
+
+                                    span.className = 'day-slots'
+
+                                    span.innerHTML = pluralize('slot', availableDates[dateString], true)
+
+                                    target.append(span)
+                                }
+                            })
                         }
                     })
                 "
